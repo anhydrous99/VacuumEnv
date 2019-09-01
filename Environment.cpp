@@ -8,11 +8,11 @@ Environment::Environment(int n) : _n(n) {
     _data = static_cast<cell *>(std::calloc(0, sizeof(cell) * n));
 }
 
-Environment::cell Environment::operator()(int i, int j) {
+cell Environment::operator()(int i, int j) {
     return _data[i * _n + j];
 }
 
-std::ostream &operator<<(std::ostream &os, const Environment::cell &cell) {
+std::ostream &operator<<(std::ostream &os, const cell &cell) {
     os << cell.s << "," << cell.l;
     return os;
 }
