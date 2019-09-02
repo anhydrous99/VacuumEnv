@@ -6,14 +6,7 @@
 #define CSCI6350_PROJECT1_ENVIRONMENT_H
 
 #include <ostream>
-
-struct cell {
-    int s;
-    int l;
-
-    cell() : s(0), l(0) {}
-    cell(int _s, int _l) : s(_s), l(_l) {}
-};
+#include "cell.h"
 
 //! The Environment contains the vacuum's universe
 /*!
