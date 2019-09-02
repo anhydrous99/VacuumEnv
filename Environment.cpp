@@ -16,10 +16,9 @@ std::ostream &operator<<(std::ostream &os, const Environment &environment) {
     auto* data = environment._data;
     int n = environment._n;
     for (int i = 0; i < n; i++) {
-        os << "|";
         int current_row = i * n;
         for (int j = 0; j < n; j++) {
-            os << data[current_row + j] << "|";
+            os << data[current_row + j] << " ";
         }
         os << std::endl;
     }

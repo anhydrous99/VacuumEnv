@@ -9,21 +9,22 @@
 
 struct cell {
     enum cell_type {
-        NON_BOUNDARY = 0,
-        WEST_BOUNDARY = 1,
-        NORTH_BOUNDARY = 2,
-        EAST_BOUNDARY = 3,
-        SOUTH_BOUNDARY = 4,
-        NORTHWEST_CORNER = 5,
-        NORTHEAST_CORNER = 6,
-        SOUTHEAST_CORNER = 7,
-        SOUTHWEST_CORDER = 8
-    } cellType = NON_BOUNDARY;
+        NON_BOUNDARY_TYPE = 0,
+        WEST_BOUNDARY_TYPE = 1,
+        NORTH_BOUNDARY_TYPE = 2,
+        EAST_BOUNDARY_TYPE = 3,
+        SOUTH_BOUNDARY_TYPE = 4,
+        NORTHWEST_CORNER_TYPE = 5,
+        NORTHEAST_CORNER_TYPE = 6,
+        SOUTHEAST_CORNER_TYPE = 7,
+        SOUTHWEST_CORDER_TYPE = 8,
+        OBSTACLE_TYPE = 9
+    } cellType = NON_BOUNDARY_TYPE;
 
     enum cell_value {
-        CLEAN = 0,
-        DIRTY = 1
-    } cellValue = CLEAN;
+        CLEAN_VALUE = 0,
+        DIRTY_VALUE = 1
+    } cellValue = CLEAN_VALUE;
 
     cell() = default;
     cell(cell_type ctype, cell_value cvalue) { cellType = ctype; cellValue = cvalue; }

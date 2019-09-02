@@ -20,7 +20,7 @@ public:
     // construct/destroy
 
     /*!
-     * Constructs a Zeroed environment
+     * Constructs an empty environment
      * @param n Size side of environment
      */
     explicit Environment(int n);
@@ -36,7 +36,6 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Environment &environment);
 };
 
-std::ostream &operator<<(std::ostream &os, const cell &cell);
 std::ostream &operator<<(std::ostream &os, const Environment &environment);
 
 #endif //CSCI6350_PROJECT1_ENVIRONMENT_H
