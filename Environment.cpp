@@ -2,6 +2,8 @@
 // Created by aherrera on 8/31/19.
 //
 
+#include <random>
+
 #include "Environment.h"
 
 Environment::Environment(int n) : _n(n), _data(n * n) {
@@ -23,6 +25,36 @@ Environment::Environment(int n) : _n(n), _data(n * n) {
                 _data[i * n + j].cellType = cell::WEST_BOUNDARY_TYPE;
             else if (j == n - 1)
                 _data[i * n + j].cellType = cell::EAST_BOUNDARY_TYPE;
+        }
+    }
+}
+
+Environment::Environment(int n, float dirty_percentage) : Environment(n) {
+    assert(0.0 <= dirty_percentage <= 1.0);
+    unsigned long n_elements = _data.size();
+
+    if (dirty_percentage == 1.0) {
+        std::transform(_data.begin(), _data.end(), _data.end(), [](cell c) -> cell {
+            c.cellValue = cell::DIRTY_VALUE;
+            return c;
+        });
+        return;
+    }
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(0, n_elements - 1);
+
+    unsigned long n_dirty = static_cast<unsigned>(
+            static_cast<float>(n_elements) * dirty_percentage);
+    std::vector<int> dirty;
+    for (unsigned long i = 0; i < n_dirty; i++) {
+        int rng = dis(gen);
+        if (std::find(dirty.begin(), dirty.end(), rng) == dirty.end()) {
+            dirty.push_back(rng);
+            _data[rng].cellValue = cell::DIRTY_VALUE;
+        } else {
+            i--;
         }
     }
 }

@@ -20,10 +20,17 @@ public:
     // construct/destroy
 
     /*!
-     * Constructs an empty environment
-     * @param n Size side of environment
+     * Constructs a nxn empty environment
+     * @param n Size of side of environment
      */
     explicit Environment(int n);
+
+    /*!
+     * Constructs nxn environment with (dirty_percentage) clean/dirty cell ratio
+     * @param n Size of size of environment
+     * @param dirty_percentage Percentage of cells dirty (0.0 <= dirty_percentage <= 1.0)
+     */
+    Environment(int n, float dirty_percentage);
 
     /*!
      * Used to access environment cells
