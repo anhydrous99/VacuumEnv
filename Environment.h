@@ -13,7 +13,7 @@
  * It consists of a matrix type of interface where
  */
 class Environment {
-    cell *_data;
+    std::vector<cell> _data;
     int _n;
 
 public:
@@ -31,7 +31,7 @@ public:
      * @param j The column to access
      * @return The cell at (i, j)
      */
-    cell operator()(int i, int j);
+    cell &operator()(int i, int j);
 
     friend std::ostream &operator<<(std::ostream &os, const Environment &environment);
 };
