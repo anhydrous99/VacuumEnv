@@ -34,7 +34,7 @@ Environment::Environment(int n, float dirty_percentage) : Environment(n) {
     unsigned long n_elements = _data.size();
 
     if (dirty_percentage == 1.0) {
-        std::transform(_data.begin(), _data.end(), _data.end(), [](cell c) -> cell {
+        std::transform(_data.begin(), _data.end(), _data.begin(), [](cell c) -> cell {
             c.cellValue = cell::DIRTY_VALUE;
             return c;
         });
