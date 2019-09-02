@@ -33,13 +33,30 @@ std::ostream &operator<<(std::ostream &os, const cell &input_cell) {
         case cell::SOUTHWEST_CORDER_TYPE:
             os << "southwest-corner,";
             break;
-        case cell::OBSTACLE_TYPE:
-            os << "obstacle,";
     }
-    if (input_cell.cellValue == cell::CLEAN_VALUE)
-        os << "clean";
-    else
-        os << "dirty";
+    for (const cell::cell_obstacle& obs : input_cell.neighborObstacles) {
+        switch (obs) {
+            case cell::UPPER_OBSTACLE:
+                os << "obstacle-upper,";
+                break;
+            case cell::LOWER_OBSTACLE:
+                os << "obstacle-lower,";
+                break;
+            case cell::LEFT_OBSTACLE:
+                os << "obstacle-left,";
+                break;
+            case cell::RIGHT_OBSTACLE:
+                os << "obstacle-right,";
+        }
+    }
+    if (!input_cell.contains_obstacle) {
+        if (input_cell.cellValue == cell::CLEAN_VALUE)
+            os << "clean";
+        else
+            os << "dirty";
+    } else {
+        os << "obstacle";
+    }
     os << "}";
     return os;
 }
