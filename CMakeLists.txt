@@ -3,4 +3,4 @@ project(CSCI6350_project1)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(CSCI6350_project1 main.cpp Environment.h Environment.cpp)
+add_executable(CSCI6350_project1 main.cpp Environment.h Environment.cpp cell.h cell.cpp)

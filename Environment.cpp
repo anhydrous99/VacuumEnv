@@ -12,11 +12,6 @@ cell Environment::operator()(int i, int j) {
     return _data[i * _n + j];
 }
 
-std::ostream &operator<<(std::ostream &os, const cell &cell) {
-    os << cell.s << "," << cell.l;
-    return os;
-}
-
 std::ostream &operator<<(std::ostream &os, const Environment &environment) {
     auto* data = environment._data;
     int n = environment._n;
