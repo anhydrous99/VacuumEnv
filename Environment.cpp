@@ -6,6 +6,26 @@
 
 #include "Environment.h"
 
+void Environment::recalculate_neighbor_obstacles() {
+    for (auto & obj : _data)
+        obj.neighborObstacles.clear();
+    for (int i = 0; i < _n; i++) {
+        int current_row = i * _n;
+        for (int j = 0; j < _n; j++) {
+            if (_data[current_row + j].contains_obstacle) {
+                if (i != 0)
+                    _data[(i - 1) * _n + j].neighborObstacles.push_back(cell::RIGHT_OBSTACLE);
+                if (i != _n - 1)
+                    _data[(i + 1) * _n + j].neighborObstacles.push_back(cell::LEFT_OBSTACLE);
+                if (j != 0)
+                    _data[current_row + j - 1].neighborObstacles.push_back(cell::UPPER_OBSTACLE);
+                if (j != _n - 1)
+                    _data[current_row + j + 1].neighborObstacles.push_back(cell::LOWER_OBSTACLE);
+            }
+        }
+    }
+}
+
 Environment::Environment(int n) : _n(n), _data(n * n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -53,6 +73,41 @@ Environment::Environment(int n, float dirty_percentage) : Environment(n) {
         if (std::find(dirty.begin(), dirty.end(), rn) == dirty.end()) {
             dirty.push_back(rn);
             _data[rn].cellValue = cell::DIRTY_VALUE;
+        } else {
+            i--;
+        }
+    }
+    recalculate_neighbor_obstacles();
+}
+
+Environment::Environment(int n, float dirty_percentage, float percentage_obstacle) : Environment(n, dirty_percentage) {
+    assert(0.0 <= percentage_obstacle <= percentage_obstacle);
+    unsigned long n_elements = _data.size();
+
+    if (percentage_obstacle == 1.0) {
+        std::transform(_data.begin(), _data.end(), _data.begin(), [](cell c) -> cell {
+            c.contains_obstacle = True;
+            c.neighborObstacles.push_back(cell::UPPER_OBSTACLE);
+            c.neighborObstacles.push_back(cell::LOWER_OBSTACLE);
+            c.neighborObstacles.push_back(cell::RIGHT_OBSTACLE);
+            c.neighborObstacles.push_back(cell::LEFT_OBSTACLE);
+            return c;
+        })
+        return;
+    }
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(0, n_elements - 1);
+
+    unsigned long n_dirty = static_cast<unsigned>(
+            static_cast<float>(n_elements) * dirty_percentage);
+    std::vector<int> dirty;
+    for (unsigned long i = 0; i < n_dirty; i++) {
+        int rn = dis(gen);
+        if (std::find(dirty.begin(), dirty.end(), rn) == dirty.end()) {
+            dirty.push_back(rn);
+            _data[rn].contains_obstacle = true;
         } else {
             i--;
         }
