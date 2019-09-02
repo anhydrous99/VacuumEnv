@@ -49,10 +49,10 @@ Environment::Environment(int n, float dirty_percentage) : Environment(n) {
             static_cast<float>(n_elements) * dirty_percentage);
     std::vector<int> dirty;
     for (unsigned long i = 0; i < n_dirty; i++) {
-        int rng = dis(gen);
-        if (std::find(dirty.begin(), dirty.end(), rng) == dirty.end()) {
-            dirty.push_back(rng);
-            _data[rng].cellValue = cell::DIRTY_VALUE;
+        int rn = dis(gen);
+        if (std::find(dirty.begin(), dirty.end(), rn) == dirty.end()) {
+            dirty.push_back(rn);
+            _data[rn].cellValue = cell::DIRTY_VALUE;
         } else {
             i--;
         }
