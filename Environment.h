@@ -53,6 +53,12 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Environment &environment);
 };
 
+/*!
+ * Operator to print Environment
+ * @param os The output stream
+ * @param environment The environment to print
+ * @return The output stream with the environment em-printed on it
+ */
 std::ostream &operator<<(std::ostream &os, const Environment &environment);
 
 #endif //CSCI6350_PROJECT1_ENVIRONMENT_H
