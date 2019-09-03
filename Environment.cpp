@@ -117,7 +117,17 @@ Environment::Environment(int n, float dirty_percentage, float percentage_obstacl
 }
 
 cell &Environment::operator()(int i, int j) {
+    assert(i * _n + j < _n * _n)
     return _data[i * _n + j];
+}
+
+cell &Environment::operator[](int i) {
+    assert(i < _n * _n);
+    return _data[i];
+}
+
+cell *Environment::data() {
+    return _data.data();
 }
 
 std::ostream &operator<<(std::ostream &os, const Environment &environment) {

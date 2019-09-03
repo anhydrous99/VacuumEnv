@@ -50,6 +50,15 @@ public:
      */
     cell &operator()(int i, int j);
 
+    /*!
+     * Used to access environment cells consecutively
+     * @param i The index
+     * @return The cell at index i
+     */
+    cell &operator[](int i);
+
+    cell *data();
+
     friend std::ostream &operator<<(std::ostream &os, const Environment &environment);
 };
 
