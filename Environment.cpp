@@ -86,13 +86,13 @@ Environment::Environment(int n, float dirty_percentage, float percentage_obstacl
 
     if (percentage_obstacle == 1.0) {
         std::transform(_data.begin(), _data.end(), _data.begin(), [](cell c) -> cell {
-            c.contains_obstacle = True;
+            c.contains_obstacle = true;
             c.neighborObstacles.push_back(cell::UPPER_OBSTACLE);
             c.neighborObstacles.push_back(cell::LOWER_OBSTACLE);
             c.neighborObstacles.push_back(cell::RIGHT_OBSTACLE);
             c.neighborObstacles.push_back(cell::LEFT_OBSTACLE);
             return c;
-        })
+        });
         return;
     }
 
