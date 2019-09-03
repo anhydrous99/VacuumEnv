@@ -6,6 +6,7 @@
 #define CSCI6350_PROJECT1_ENVIRONMENT_H
 
 #include <ostream>
+#include "vacuum.h"
 #include "cell.h"
 
 //! The Environment contains the vacuum's universe
@@ -13,6 +14,7 @@
  * It consists of a matrix type of interface where
  */
 class Environment {
+    std::vector<vacuum> _vacuums;
     std::vector<cell> _data;
     int _n;
 
