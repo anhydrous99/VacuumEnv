@@ -8,6 +8,9 @@
 
 class vacuum {
     int x_pos, y_pos;
+
+public:
+    vacuum(int x_position, int y_position);
 };
 
 
