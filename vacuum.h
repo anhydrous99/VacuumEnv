@@ -16,10 +16,32 @@ typedef std::pair<int, int> position;
  */
 class vacuum {
     position pos;
-    std::function<position(position)> agent_function;
 
 public:
+    /*!
+     * Constructs a vacuum object
+     * @param x_position
+     * @param y_position
+     */
     vacuum(int x_position, int y_position);
+
+    /*!
+     * Gets the position of the vacuum
+     * @return The position of the object, a pair of integers
+     */
+    position get_position();
+
+    /*!
+     * Gets the x-axis position of the vacuum
+     * @return An integer representing the x-axis of the vacuum
+     */
+    int get_x();
+
+    /*!
+     * Gets the y-axis position of the vacuum
+     * @return An integer representing the x-axis of the vacuum
+     */
+    int get_y();
 };
 
 

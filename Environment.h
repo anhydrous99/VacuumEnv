@@ -59,6 +59,8 @@ public:
      */
     cell &operator[](int i);
 
+    void add_vacuum(int i, int j);
+
     cell *data();
 
     friend std::ostream &operator<<(std::ostream &os, const Environment &environment);

@@ -6,3 +6,15 @@
 
 vacuum::vacuum(int x_position, int y_position) : pos(x_position, y_position) {
 }
+
+position vacuum::get_position() {
+    return pos;
+}
+
+int vacuum::get_x() {
+    return pos.first;
+}
+
+int vacuum::get_y() {
+    return pos.second;
+}
