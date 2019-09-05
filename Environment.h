@@ -6,6 +6,7 @@
 #define CSCI6350_PROJECT1_ENVIRONMENT_H
 
 #include <ostream>
+#include <map>
 #include "vacuum.h"
 #include "cell.h"
 
@@ -14,7 +15,8 @@
  * It consists of a matrix type of interface where
  */
 class Environment {
-    std::vector<vacuum> _vacuums;
+    std::function<Environment(Environment)> agent_function;
+    std::map<std::string, vacuum> _vacuums;
     std::vector<cell> _data;
     int _n;
 
@@ -59,8 +61,23 @@ public:
      */
     cell &operator[](int i);
 
-    void add_vacuum(int i, int j);
+    /*!
+     * Adds a vacuum to the environment
+     * @param i Ith column to put vacuum at
+     * @param j Jth row to put vacuum at
+     */
+    void add_vacuum(int i, int j, const std::string &name);
 
+    /*!
+     * Move a vacuum
+     * @param direction
+     */
+    void move_vacuum(const std::string &name, char direction);
+
+    /*!
+     * Returns a pointer to cell data
+     * @return
+     */
     cell *data();
 
     friend std::ostream &operator<<(std::ostream &os, const Environment &environment);

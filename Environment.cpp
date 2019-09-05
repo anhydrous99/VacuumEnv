@@ -122,10 +122,24 @@ cell &Environment::operator()(int i, int j) {
     return _data[i * _n + j];
 }
 
-void Environment::add_vacuum(int i, int j) {
+void Environment::add_vacuum(int i, int j, const std::string &name) {
     assert(i < _n);
     assert(j < _n);
-    _vacuums.emplace_back(vacuum(i, j));
+    _vacuums[name] = vacuum(i, j);
+}
+
+void Environment::move_vacuum(const std::string &name, char direction) {
+    assert(direction == 'N' ||
+    direction == 'W' ||
+    direction == 'E' ||
+    direction == 'S');
+    assert(_vacuums.find(name) != _vacuums.end());
+
+    vacuum current_vacuum = _vacuums[name];
+    position p = current_vacuum.get_position();
+    cell current_cell = operator()(p.first, p.second);
+
+    // TODO
 }
 
 cell &Environment::operator[](int i) {
