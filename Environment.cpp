@@ -125,7 +125,7 @@ cell &Environment::operator()(int i, int j) {
 void Environment::add_vacuum(int i, int j, const std::string &name) {
     assert(i < _n);
     assert(j < _n);
-    _vacuums[name] = vacuum(i, j);
+    _vacuums.emplace(std::make_pair(std::string(name), vacuum(i, j)));
 }
 
 void Environment::move_vacuum(const std::string &name, char direction) {

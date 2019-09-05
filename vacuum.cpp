@@ -4,7 +4,8 @@
 
 #include "vacuum.h"
 
-vacuum::vacuum(int x_position, int y_position) : pos(x_position, y_position) {
+vacuum::vacuum(int x_position, int y_position) {
+    pos = std::make_pair(x_position, y_position);
 }
 
 position vacuum::get_position() {
