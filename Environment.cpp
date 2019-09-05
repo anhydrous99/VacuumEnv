@@ -117,8 +117,15 @@ Environment::Environment(int n, float dirty_percentage, float percentage_obstacl
 }
 
 cell &Environment::operator()(int i, int j) {
-    assert(i * _n + j < _n * _n)
+    assert(i < _n);
+    assert(j < _n);
     return _data[i * _n + j];
+}
+
+void Environment::add_vacuum(int i, int j) {
+    assert(i < _n);
+    assert(j < _n);
+    _vacuums.emplace_back(vacuum(i, j));
 }
 
 cell &Environment::operator[](int i) {
