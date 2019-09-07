@@ -138,7 +138,8 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     direction == 'W' ||
     direction == 'E' ||
     direction == 'S');
-    assert(_vacuums.find(name) != _vacuums.end());
+    auto search =  _vacuums.find(name);
+    assert(search != _vacuums.end());
 
     vacuum current_vacuum = _vacuums[name];
     position p = current_vacuum.get_position();
@@ -181,7 +182,7 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     else
         p.second--;
 
-    access_vacuum(name).set_position(p);
+    search->second.set_position(p);
 }
 
 cell &Environment::operator[](int i) {
