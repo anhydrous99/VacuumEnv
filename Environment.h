@@ -69,6 +69,13 @@ public:
     void add_vacuum(int i, int j, const std::string &name);
 
     /*!
+     * Gets reference to vacuum "name"
+     * @param name Name of vacuum
+     * @return A reference to the vacuum
+     */
+    vacuum &access_vacuum(const std::string &name);
+
+    /*!
      * Move a vacuum
      * @param direction
      */

@@ -128,6 +128,11 @@ void Environment::add_vacuum(int i, int j, const std::string &name) {
     _vacuums.emplace(std::make_pair(std::string(name), vacuum(i, j)));
 }
 
+vacuum &Environment::access_vacuum(const std::string &name) {
+    assert(_vacuums.find(name) != _vacuums.end());
+    return _vacuums[name];
+}
+
 void Environment::move_vacuum(const std::string &name, char direction) {
     assert(direction == 'N' ||
     direction == 'W' ||
@@ -139,7 +144,44 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     position p = current_vacuum.get_position();
     cell current_cell = operator()(p.first, p.second);
 
-    // TODO
+    switch (current_cell.cellType) {
+        case cell::EAST_BOUNDARY_TYPE:
+            assert(direction != 'W');
+            break;
+        case cell::WEST_BOUNDARY_TYPE:
+            assert(direction != 'E');
+            break;
+        case cell::NORTH_BOUNDARY_TYPE:
+            assert(direction != 'N');
+            break;
+        case cell::SOUTH_BOUNDARY_TYPE:
+            assert(direction != 'S');
+            break;
+        case cell::NORTHWEST_CORNER_TYPE:
+            assert(direction != 'N' && direction != 'W');
+            break;
+        case cell::NORTHEAST_CORNER_TYPE:
+            assert(direction != 'N' && direction != 'E');
+            break;
+        case cell::SOUTHWEST_CORDER_TYPE:
+            assert(direction != 'S' && direction != 'W');
+            break;
+        case cell::SOUTHEAST_CORNER_TYPE:
+            assert(direction != 'S' && direction != 'E');
+            break;
+        default:;
+    }
+
+    if (direction == 'W')
+        p.first--;
+    else if (direction == 'E')
+        p.first++;
+    else if (direction == 'N')
+        p.second++;
+    else
+        p.second--;
+
+    access_vacuum(name).set_position(p);
 }
 
 cell &Environment::operator[](int i) {

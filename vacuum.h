@@ -33,6 +33,12 @@ public:
     position get_position();
 
     /*!
+     * Sets the position of vacuum
+     * @param p The position withing the Environment to set the vacuum
+     */
+    void set_position(position p);
+
+    /*!
      * Gets the x-axis position of the vacuum
      * @return An integer representing the x-axis of the vacuum
      */

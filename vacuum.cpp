@@ -12,6 +12,10 @@ position vacuum::get_position() {
     return pos;
 }
 
+void vacuum::set_position(position p) {
+    pos = p;
+}
+
 int vacuum::get_x() {
     return pos.first;
 }
