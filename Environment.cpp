@@ -9,7 +9,7 @@
 #include "Environment.h"
 
 void Environment::recalculate_neighbor_obstacles() {
-    for (auto & obj : _data)
+    for (auto &obj : _data)
         obj.neighborObstacles.clear();
     for (int i = 0; i < _n; i++) {
         int current_row = i * _n;
@@ -135,10 +135,10 @@ vacuum &Environment::access_vacuum(const std::string &name) {
 
 void Environment::move_vacuum(const std::string &name, char direction) {
     assert(direction == 'N' ||
-    direction == 'W' ||
-    direction == 'E' ||
-    direction == 'S');
-    auto search =  _vacuums.find(name);
+           direction == 'W' ||
+           direction == 'E' ||
+           direction == 'S');
+    auto search = _vacuums.find(name);
     assert(search != _vacuums.end());
 
     vacuum current_vacuum = _vacuums[name];
@@ -188,6 +188,14 @@ void Environment::move_vacuum(const std::string &name, char direction) {
 cell &Environment::operator[](int i) {
     assert(i < _n * _n);
     return _data[i];
+}
+
+bool Environment::check_all_clean() {
+    for (const cell &c : _data)
+        if (!c.contains_obstacle)
+            if (c.cellValue == cell::DIRTY_VALUE)
+                return false;
+    return true;
 }
 
 cell *Environment::data() {

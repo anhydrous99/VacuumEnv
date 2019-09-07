@@ -82,6 +82,12 @@ public:
     void move_vacuum(const std::string &name, char direction);
 
     /*!
+     * Check if environment has been cleaned
+     * @return True if cleaned False otherwise
+     */
+    bool check_all_clean();
+
+    /*!
      * Returns a pointer to cell data
      * @return
      */
