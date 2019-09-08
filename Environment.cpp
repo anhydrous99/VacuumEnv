@@ -185,6 +185,16 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     search->second.set_position(p);
 }
 
+void Environment::step_vacuum(const std::string &vacuum_name) {
+    Environment current_environment = *this;
+    _vacuums[vacuum_name] = agent_function(vacuum_name, current_environment);
+}
+
+void Environment::step_vacuums() {
+    for (const auto &p : _vacuums)
+        step_vacuum(p.first);
+}
+
 cell &Environment::operator[](int i) {
     assert(i < _n * _n);
     return _data[i];

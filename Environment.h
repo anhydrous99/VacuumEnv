@@ -15,7 +15,7 @@
  * It consists of a matrix type of interface where
  */
 class Environment {
-    std::function<Environment(Environment)> agent_function;
+    std::function<vacuum(std::string, Environment)> agent_function;
     std::map<std::string, vacuum> _vacuums;
     std::vector<cell> _data;
     int _n;
@@ -80,6 +80,17 @@ public:
      * @param direction
      */
     void move_vacuum(const std::string &name, char direction);
+
+    /*!
+     * Steps a vacuum by 1 step using a preset vacuum function
+     * @param vacuum_name The name of the vacuum
+     */
+    void step_vacuum(const std::string &vacuum_name);
+
+    /*!
+     * Steps all vacuums by 1 using a preset vacuum function
+     */
+    void step_vacuums();
 
     /*!
      * Check if environment has been cleaned
