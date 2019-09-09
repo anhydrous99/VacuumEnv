@@ -55,6 +55,13 @@ public:
     cell &operator()(int i, int j);
 
     /*!
+     * Used to access environment cells
+     * @param p Position type, derived from std::pair<int, int>
+     * @return returns cell at position p
+     */
+    cell &operator()(position p);
+
+    /*!
      * Used to access environment cells consecutively
      * @param i The index
      * @return The cell at index i
@@ -84,8 +91,9 @@ public:
     /*!
      * Steps a vacuum by 1 step using a preset vacuum function
      * @param vacuum_name The name of the vacuum
+     * @return Whether the Environment is clean
      */
-    void step_vacuum(const std::string &vacuum_name);
+    bool step_vacuum(const std::string &vacuum_name);
 
     /*!
      * Changes the agent function
@@ -95,8 +103,9 @@ public:
 
     /*!
      * Steps all vacuums by 1 using a preset vacuum function
+     * @return Whether the Environment is clean
      */
-    void step_vacuums();
+    bool step_vacuums();
 
     /*!
      * Check if environment has been cleaned

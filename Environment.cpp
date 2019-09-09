@@ -122,6 +122,10 @@ cell &Environment::operator()(int i, int j) {
     return _data[i * _n + j];
 }
 
+cell &Environment::operator()(position p) {
+    return operator()(p.first, p.second);
+}
+
 void Environment::add_vacuum(int i, int j, const std::string &name) {
     assert(i < _n);
     assert(j < _n);
@@ -194,14 +198,17 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     search->second.set_position(p);
 }
 
-void Environment::step_vacuum(const std::string &vacuum_name) {
+bool Environment::step_vacuum(const std::string &vacuum_name) {
     Environment current_environment = *this;
     _vacuums[vacuum_name] = agent_function(vacuum_name, current_environment);
+    return check_all_clean();
 }
 
-void Environment::step_vacuums() {
+bool Environment::step_vacuums() {
+    bool is_clean = check_all_clean();
     for (const auto &p : _vacuums)
-        step_vacuum(p.first);
+        is_clean = step_vacuum(p.first);
+    return is_clean;
 }
 
 void Environment::add_agent_function(const std::function<vacuum(const std::string&, Environment&)> &func) {
