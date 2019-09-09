@@ -200,7 +200,7 @@ void Environment::move_vacuum(const std::string &name, char direction) {
 
 bool Environment::step_vacuum(const std::string &vacuum_name) {
     Environment current_environment = *this;
-    _vacuums[vacuum_name] = agent_function(vacuum_name, current_environment);
+    move_vacuum(vacuum_name, agent_function(vacuum_name, current_environment));
     return check_all_clean();
 }
 
@@ -211,7 +211,7 @@ bool Environment::step_vacuums() {
     return is_clean;
 }
 
-void Environment::add_agent_function(const std::function<vacuum(const std::string&, Environment&)> &func) {
+void Environment::add_agent_function(const std::function<char(const std::string&, Environment&)> &func) {
     agent_function = func;
 }
 

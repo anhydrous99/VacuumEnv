@@ -7,12 +7,12 @@
 int main(int argc, char *argv[]) {
     Environment env1(10, 20);
 
-    std::function<vacuum(const std::string &, Environment &)> strategy_1 = [](const std::string &vacuum_name,
-                                                                                    Environment &env) -> vacuum {
+    std::function<char(const std::string &, Environment &)> strategy_1 = [](const std::string &vacuum_name,
+                                                                                    Environment &env) -> char {
 
     };
-    std::function<vacuum(const std::string &, Environment &)> strategy_2 = [=](const std::string &vacuum_name,
-                                                                                    Environment &env) -> vacuum {
+    std::function<char(const std::string &, Environment &)> strategy_2 = [=](const std::string &vacuum_name,
+                                                                                    Environment &env) -> char {
         vacuum current_vacuum = env.access_vacuum(vacuum_name);
         std::random_device rd;
         std::uniform_int_distribution<int> dis(1, 4);
@@ -69,8 +69,7 @@ int main(int argc, char *argv[]) {
                     continue;
             }
 
-            env.move_vacuum(vacuum_name, direction);
-            break;
+            return direction;
         }
     };
     return EXIT_SUCCESS;
