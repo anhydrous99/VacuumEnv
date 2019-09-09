@@ -43,8 +43,6 @@ int main(int argc, char *argv[]) {
 
                 if (env(current_vacuum.get_x(), current_vacuum.get_y() + 1).contains_obstacle)
                     continue;
-
-                env.move_vacuum(vacuum_name, direction);
             } else if (random_number == 2) {
                 if (current_cell.cellType == cell::SOUTH_BOUNDARY_TYPE ||
                 current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE ||
@@ -53,8 +51,6 @@ int main(int argc, char *argv[]) {
 
                 if (env(current_vacuum.get_x(), current_vacuum.get_y() - 1).contains_obstacle)
                     continue;
-
-                env.move_vacuum(vacuum_name, direction);
             } else if (random_number == 3) {
                 if (current_cell.cellType == cell::WEST_BOUNDARY_TYPE ||
                 current_cell.cellType == cell::SOUTHWEST_CORDER_TYPE ||
@@ -63,8 +59,6 @@ int main(int argc, char *argv[]) {
 
                 if (env(current_vacuum.get_x() - 1, current_vacuum.get_y()).contains_obstacle)
                     continue;
-
-                env.move_vacuum(vacuum_name, direction);
             } else {
                 if (current_cell.cellType == cell::EAST_BOUNDARY_TYPE ||
                 current_cell.cellType == cell::SOUTHWEST_CORDER_TYPE ||
@@ -73,9 +67,10 @@ int main(int argc, char *argv[]) {
 
                 if (env(current_vacuum.get_x() + 1, current_vacuum.get_y()).contains_obstacle)
                     continue;
-
-                env.move_vacuum(vacuum_name, direction);
             }
+
+            env.move_vacuum(vacuum_name, direction);
+            break;
         }
     };
     return EXIT_SUCCESS;
