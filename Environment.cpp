@@ -173,14 +173,23 @@ void Environment::move_vacuum(const std::string &name, char direction) {
         default:;
     }
 
-    if (direction == 'W')
+    if (direction == 'W') {
+        cell neighbor = operator()(p.first - 1, p.second);
+        assert(!neighbor.contains_obstacle);
         p.first--;
-    else if (direction == 'E')
+    } else if (direction == 'E') {
+        cell neighbor = operator()(p.first + 1, p.second);
+        assert(!neighbor.contains_obstacle);
         p.first++;
-    else if (direction == 'N')
+    } else if (direction == 'N') {
+        cell neighbor = operator()(p.first, p.second + 1);
+        assert(!neighbor.contains_obstacle);
         p.second++;
-    else
+    } else {
+        cell neighbor = operator()(p.first, p.second - 1);
+        assert(!neighbor.contains_obstacle);
         p.second--;
+    }
 
     search->second.set_position(p);
 }
@@ -193,6 +202,10 @@ void Environment::step_vacuum(const std::string &vacuum_name) {
 void Environment::step_vacuums() {
     for (const auto &p : _vacuums)
         step_vacuum(p.first);
+}
+
+void Environment::add_agent_function(const std::function<vacuum(const std::string&, Environment&)> &func) {
+    agent_function = func;
 }
 
 cell &Environment::operator[](int i) {
