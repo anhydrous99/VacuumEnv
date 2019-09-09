@@ -5,21 +5,24 @@
 #include "Environment.h"
 
 int main(int argc, char *argv[]) {
-    Environment env1(10, 20);
-
-    std::function<char(const std::string &, Environment &)> strategy_1 = [](const std::string &vacuum_name,
-                                                                                    Environment &env) -> char {
-
-    };
-    std::function<char(const std::string &, Environment &)> strategy_2 = [=](const std::string &vacuum_name,
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(1, 4);
+    int i = 0, j = 0;
+    std::function<char(const std::string &, Environment &)> strategy_1 = [&](const std::string &vacuum_name,
                                                                                     Environment &env) -> char {
         vacuum current_vacuum = env.access_vacuum(vacuum_name);
-        std::random_device rd;
-        std::uniform_int_distribution<int> dis(1, 4);
+        cell current_cell = env(current_vacuum.get_position());
+
+        // if (south)
+    };
+    std::function<char(const std::string &, Environment &)> strategy_2 = [&](const std::string &vacuum_name,
+                                                                                    Environment &env) -> char {
+        vacuum current_vacuum = env.access_vacuum(vacuum_name);
         cell current_cell = env(current_vacuum.get_position());
 
         while (true) {
-            int random_number = dis(rd);
+            int random_number = dis(gen);
             char direction;
             switch (random_number) {
                 case 1:

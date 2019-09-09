@@ -114,6 +114,12 @@ public:
     bool check_all_clean();
 
     /*!
+     * Gets size of a side of the Environment
+     * @return The size of a side of the Environment
+     */
+    int side_size();
+
+    /*!
      * Returns a pointer to cell data
      * @return
      */

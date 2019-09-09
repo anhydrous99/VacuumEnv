@@ -228,6 +228,10 @@ bool Environment::check_all_clean() {
     return true;
 }
 
+int Environment::side_size() {
+    return _n;
+}
+
 cell *Environment::data() {
     return _data.data();
 }
