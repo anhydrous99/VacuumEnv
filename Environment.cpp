@@ -180,19 +180,19 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     if (direction == 'W') {
         cell neighbor = operator()(p.first - 1, p.second);
         assert(!neighbor.contains_obstacle);
-        p.first--;
+        p.first++;
     } else if (direction == 'E') {
         cell neighbor = operator()(p.first + 1, p.second);
         assert(!neighbor.contains_obstacle);
-        p.first++;
+        p.first--;
     } else if (direction == 'N') {
         cell neighbor = operator()(p.first, p.second + 1);
         assert(!neighbor.contains_obstacle);
-        p.second++;
+        p.second--;
     } else {
         cell neighbor = operator()(p.first, p.second - 1);
         assert(!neighbor.contains_obstacle);
-        p.second--;
+        p.second++;
     }
 
     search->second.set_position(p);
