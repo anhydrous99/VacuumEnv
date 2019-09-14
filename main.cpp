@@ -10,34 +10,30 @@ int main(int argc, char *argv[]) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(1, 4);
-    char current_direction = 'E';
-    std::function<char(const std::string &, Environment &)> strategy_1 = [&](const std::string &vacuum_name,
-                                                                                    Environment &env) -> char {
+    std::function<std::string(const std::string &, Environment &)> strategy_1 = [](const std::string &vacuum_name,
+                                                                                    Environment &env) -> std::string {
         vacuum current_vacuum = env.access_vacuum(vacuum_name);
-        std::cout << current_vacuum.get_position().first << " " << current_vacuum.get_position().second << std::endl;
-        cell current_cell = env(current_vacuum.get_position());
+        position current_position = current_vacuum.get_position();
+        cell current_cell = env(current_position);
 
-        if (current_direction == 'E' || current_direction == 'W') {
-            if (current_cell.cellType == cell::EAST_BOUNDARY_TYPE ||
-                current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE ||
-                current_cell.cellType == cell::NORTHEAST_CORNER_TYPE ||
-                current_cell.cellType == cell::WEST_BOUNDARY_TYPE ||
-                current_cell.cellType == cell::SOUTHWEST_CORDER_TYPE ||
-                current_cell.cellType == cell::NORTHWEST_CORNER_TYPE) {
-                current_direction = 'S';
-            }
-        } else if (current_direction == 'S') {
-            if (current_cell.cellType == cell::EAST_BOUNDARY_TYPE ||
-            current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE ||
-            current_cell.cellType == cell::NORTHEAST_CORNER_TYPE) {
-                current_direction = 'W';
-            } else if (current_cell.cellType == cell::WEST_BOUNDARY_TYPE ||
-            current_cell.cellType == cell::NORTHWEST_CORNER_TYPE ||
-            current_cell.cellType == cell::NORTHEAST_CORNER_TYPE) {
-                current_direction = 'E';
-            }
+        int n = env.side_size();
+
+        std::string ret;
+
+        if (current_cell.cellValue == cell::DIRTY_VALUE)
+            ret = "D";
+        else
+            ret = "C";
+
+        if (current_position.first != n - 1) {
+            if ((current_position.second + 1) % 2 == 0)
+                ret += "W";
+            else
+                ret += "E";
+        } else {
+            ret += "S";
         }
-        return current_direction;
+        return ret;
     };
     std::function<char(const std::string &, Environment &)> strategy_2 = [&](const std::string &vacuum_name,
                                                                                     Environment &env) -> char {
@@ -72,14 +68,14 @@ int main(int argc, char *argv[]) {
             } else if (random_number == 2) {
                 if (current_cell.cellType == cell::SOUTH_BOUNDARY_TYPE ||
                 current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE ||
-                current_cell.cellType == cell::SOUTHWEST_CORDER_TYPE)
+                current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE)
                     continue;
 
                 if (env(current_vacuum.get_x(), current_vacuum.get_y() - 1).contains_obstacle)
                     continue;
             } else if (random_number == 3) {
                 if (current_cell.cellType == cell::WEST_BOUNDARY_TYPE ||
-                current_cell.cellType == cell::SOUTHWEST_CORDER_TYPE ||
+                current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE ||
                 current_cell.cellType == cell::NORTHWEST_CORNER_TYPE)
                     continue;
 
@@ -87,7 +83,7 @@ int main(int argc, char *argv[]) {
                     continue;
             } else {
                 if (current_cell.cellType == cell::EAST_BOUNDARY_TYPE ||
-                current_cell.cellType == cell::SOUTHWEST_CORDER_TYPE ||
+                current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE ||
                 current_cell.cellType == cell::NORTHWEST_CORNER_TYPE)
                     continue;
 

@@ -30,7 +30,7 @@ std::ostream &operator<<(std::ostream &os, const cell &input_cell) {
         case cell::SOUTHEAST_CORNER_TYPE:
             os << "southeast-corner,";
             break;
-        case cell::SOUTHWEST_CORDER_TYPE:
+        case cell::SOUTHWEST_CORNER_TYPE:
             os << "southwest-corner,";
             break;
     }

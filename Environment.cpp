@@ -34,19 +34,19 @@ Environment::Environment(int n) : _n(n), _data(n * n) {
             if (i == 0 && j == 0)
                 _data[0].cellType = cell::NORTHWEST_CORNER_TYPE;
             else if (i == 0 && j == n - 1)
-                _data[i * n + j].cellType = cell::NORTHEAST_CORNER_TYPE;
+                _data[i * n + j].cellType = cell::SOUTHWEST_CORNER_TYPE;
             else if (i == n - 1 && j == 0)
-                _data[i * n + j].cellType = cell::SOUTHWEST_CORDER_TYPE;
-            else if (i == n - 1 && j == n - 1)
                 _data[i * n + j].cellType = cell::NORTHEAST_CORNER_TYPE;
+            else if (i == n - 1 && j == n - 1)
+                _data[i * n + j].cellType = cell::SOUTHEAST_CORNER_TYPE;
             else if (i == 0)
-                _data[i * n + j].cellType = cell::NORTH_BOUNDARY_TYPE;
+                _data[i].cellType = cell::NORTH_BOUNDARY_TYPE;
             else if (i == n - 1)
-                _data[i * n + j].cellType = cell::SOUTH_BOUNDARY_TYPE;
+                _data[i].cellType = cell::SOUTH_BOUNDARY_TYPE;
             else if (j == 0)
-                _data[i * n + j].cellType = cell::WEST_BOUNDARY_TYPE;
+                _data[j].cellType = cell::WEST_BOUNDARY_TYPE;
             else if (j == n - 1)
-                _data[i * n + j].cellType = cell::EAST_BOUNDARY_TYPE;
+                _data[j].cellType = cell::EAST_BOUNDARY_TYPE;
         }
     }
 }
@@ -137,11 +137,15 @@ vacuum &Environment::access_vacuum(const std::string &name) {
     return _vacuums[name];
 }
 
-void Environment::move_vacuum(const std::string &name, char direction) {
+void Environment::move_vacuum(const std::string &name, char direction, char clean) {
     assert(direction == 'N' ||
            direction == 'W' ||
            direction == 'E' ||
            direction == 'S');
+    assert(clean == '0' ||
+           clean == 'C' ||
+           clean == 'D');
+
     auto search = _vacuums.find(name);
     assert(search != _vacuums.end());
 
@@ -149,12 +153,17 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     position p = current_vacuum.get_position();
     cell current_cell = operator()(p.first, p.second);
 
+    if (clean == 'D') {
+        _data[p.first * _n + p.second].cellValue = cell::CLEAN_VALUE;
+        return;
+    }
+
     switch (current_cell.cellType) {
         case cell::EAST_BOUNDARY_TYPE:
-            assert(direction != 'W');
+            assert(direction != 'E');
             break;
         case cell::WEST_BOUNDARY_TYPE:
-            assert(direction != 'E');
+            assert(direction != 'W');
             break;
         case cell::NORTH_BOUNDARY_TYPE:
             assert(direction != 'N');
@@ -168,7 +177,7 @@ void Environment::move_vacuum(const std::string &name, char direction) {
         case cell::NORTHEAST_CORNER_TYPE:
             assert(direction != 'N' && direction != 'E');
             break;
-        case cell::SOUTHWEST_CORDER_TYPE:
+        case cell::SOUTHWEST_CORNER_TYPE:
             assert(direction != 'S' && direction != 'W');
             break;
         case cell::SOUTHEAST_CORNER_TYPE:
@@ -180,11 +189,11 @@ void Environment::move_vacuum(const std::string &name, char direction) {
     if (direction == 'W') {
         cell neighbor = operator()(p.first - 1, p.second);
         assert(!neighbor.contains_obstacle);
-        p.first++;
+        p.first--;
     } else if (direction == 'E') {
         cell neighbor = operator()(p.first + 1, p.second);
         assert(!neighbor.contains_obstacle);
-        p.first--;
+        p.first++;
     } else if (direction == 'N') {
         cell neighbor = operator()(p.first, p.second + 1);
         assert(!neighbor.contains_obstacle);
@@ -200,18 +209,23 @@ void Environment::move_vacuum(const std::string &name, char direction) {
 
 bool Environment::step_vacuum(const std::string &vacuum_name) {
     Environment current_environment = *this;
-    move_vacuum(vacuum_name, agent_function(vacuum_name, current_environment));
+    std::string ret = agent_function(vacuum_name, current_environment);
+    char clean = ret[0];
+    assert(clean == 'C' || clean == 'D' || clean == '0');
+    move_vacuum(vacuum_name, ret[1], clean);
     return check_all_clean();
 }
 
 bool Environment::step_vacuums() {
     bool is_clean = check_all_clean();
+    if (is_clean)
+        return is_clean;
     for (const auto &p : _vacuums)
         is_clean = step_vacuum(p.first);
     return is_clean;
 }
 
-void Environment::add_agent_function(const std::function<char(const std::string&, Environment&)> &func) {
+void Environment::add_agent_function(const std::function<std::string(const std::string &, Environment &)> &func) {
     agent_function = func;
 }
 
@@ -221,10 +235,12 @@ cell &Environment::operator[](int i) {
 }
 
 bool Environment::check_all_clean() {
-    for (const cell &c : _data)
-        if (!c.contains_obstacle)
-            if (c.cellValue == cell::DIRTY_VALUE)
+    for (int i = 0; i < _n * _n; i++) {
+        if (!_data[i].contains_obstacle) {
+            if (_data[i].cellValue == cell::DIRTY_VALUE)
                 return false;
+        }
+    }
     return true;
 }
 

@@ -18,7 +18,7 @@ struct cell {
         NORTHWEST_CORNER_TYPE = 5,
         NORTHEAST_CORNER_TYPE = 6,
         SOUTHEAST_CORNER_TYPE = 7,
-        SOUTHWEST_CORDER_TYPE = 8
+        SOUTHWEST_CORNER_TYPE = 8
     } cellType = NON_BOUNDARY_TYPE;
     enum cell_obstacle {
         UPPER_OBSTACLE,
