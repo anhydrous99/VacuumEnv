@@ -33,20 +33,20 @@ Environment::Environment(int n) : _n(n), _data(n * n) {
         for (int j = 0; j < n; j++) {
             if (i == 0 && j == 0)
                 _data[0].cellType = cell::NORTHWEST_CORNER_TYPE;
-            else if (i == 0 && j == n - 1)
-                _data[i * n + j].cellType = cell::SOUTHWEST_CORNER_TYPE;
             else if (i == n - 1 && j == 0)
+                _data[i * n + j].cellType = cell::SOUTHWEST_CORNER_TYPE;
+            else if (i == 0 && j == n - 1)
                 _data[i * n + j].cellType = cell::NORTHEAST_CORNER_TYPE;
             else if (i == n - 1 && j == n - 1)
                 _data[i * n + j].cellType = cell::SOUTHEAST_CORNER_TYPE;
             else if (i == 0)
-                _data[i].cellType = cell::NORTH_BOUNDARY_TYPE;
+                _data[j].cellType = cell::NORTH_BOUNDARY_TYPE;
             else if (i == n - 1)
-                _data[i].cellType = cell::SOUTH_BOUNDARY_TYPE;
+                _data[i * n + j].cellType = cell::SOUTH_BOUNDARY_TYPE;
             else if (j == 0)
-                _data[j].cellType = cell::WEST_BOUNDARY_TYPE;
+                _data[i * n].cellType = cell::WEST_BOUNDARY_TYPE;
             else if (j == n - 1)
-                _data[j].cellType = cell::EAST_BOUNDARY_TYPE;
+                _data[i * n + j].cellType = cell::EAST_BOUNDARY_TYPE;
         }
     }
 }
@@ -149,12 +149,12 @@ void Environment::move_vacuum(const std::string &name, char direction, char clea
     auto search = _vacuums.find(name);
     assert(search != _vacuums.end());
 
-    vacuum current_vacuum = _vacuums[name];
+    vacuum current_vacuum = search->second;
     position p = current_vacuum.get_position();
-    cell current_cell = operator()(p.first, p.second);
+    cell &current_cell = operator()(p.first, p.second);
 
     if (clean == 'D') {
-        _data[p.first * _n + p.second].cellValue = cell::CLEAN_VALUE;
+        current_cell.cellValue = cell::CLEAN_VALUE;
         return;
     }
 
@@ -187,21 +187,21 @@ void Environment::move_vacuum(const std::string &name, char direction, char clea
     }
 
     if (direction == 'W') {
+        cell neighbor = operator()(p.first, p.second - 1);
+        assert(!neighbor.contains_obstacle);
+        p.second--;
+    } else if (direction == 'E') {
+        cell neighbor = operator()(p.first, p.second + 1);
+        assert(!neighbor.contains_obstacle);
+        p.second++;
+    } else if (direction == 'N') {
         cell neighbor = operator()(p.first - 1, p.second);
         assert(!neighbor.contains_obstacle);
         p.first--;
-    } else if (direction == 'E') {
+    } else {
         cell neighbor = operator()(p.first + 1, p.second);
         assert(!neighbor.contains_obstacle);
         p.first++;
-    } else if (direction == 'N') {
-        cell neighbor = operator()(p.first, p.second + 1);
-        assert(!neighbor.contains_obstacle);
-        p.second--;
-    } else {
-        cell neighbor = operator()(p.first, p.second - 1);
-        assert(!neighbor.contains_obstacle);
-        p.second++;
     }
 
     search->second.set_position(p);
