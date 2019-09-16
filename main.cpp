@@ -40,28 +40,35 @@ int main(int argc, char *argv[]) {
             else
                 ret += "S";
         }
+
         return ret;
     };
-    std::function<char(const std::string &, Environment &)> strategy_2 = [&](const std::string &vacuum_name,
-                                                                             Environment &env) -> char {
+    std::function<std::string(const std::string &, Environment &)> strategy_2 = [&](const std::string &vacuum_name,
+                                                                             Environment &env) -> std::string {
         vacuum current_vacuum = env.access_vacuum(vacuum_name);
         cell current_cell = env(current_vacuum.get_position());
 
         while (true) {
             int random_number = dis(gen);
-            char direction;
+            std::string direction;
+
+            if (current_cell.cellValue == cell::DIRTY_VALUE)
+                direction = "D";
+            else
+                direction = "C";
+
             switch (random_number) {
                 case 1:
-                    direction = 'N';
+                    direction += "N";
                     break;
                 case 2:
-                    direction = 'S';
+                    direction += "S";
                     break;
                 case 3:
-                    direction = 'W';
+                    direction += "W";
                     break;
                 default:
-                    direction = 'E';
+                    direction += "E";
             }
 
             if (random_number == 1) {
@@ -90,8 +97,8 @@ int main(int argc, char *argv[]) {
                     continue;
             } else {
                 if (current_cell.cellType == cell::EAST_BOUNDARY_TYPE ||
-                    current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE ||
-                    current_cell.cellType == cell::NORTHWEST_CORNER_TYPE)
+                    current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE ||
+                    current_cell.cellType == cell::NORTHEAST_CORNER_TYPE)
                     continue;
 
                 if (env(current_vacuum.get_x() + 1, current_vacuum.get_y()).contains_obstacle)
@@ -103,11 +110,18 @@ int main(int argc, char *argv[]) {
     };
 
     Environment env_1(10, 0.25);
+    Environment env_2(10, 0.25);
     env_1.add_vacuum(0, 0, "Vacuum_1");
     env_1.add_agent_function(strategy_1);
 
+    env_2.add_vacuum(0, 0, "Vacuum_1");
+    env_2.add_agent_function(strategy_2);
+
     int n_steps = simulate(env_1);
-    std::cout << "Strategy 1 : " << n_steps << " steps";
+    std::cout << "Strategy 1 : " << n_steps << " steps\n";
+
+    n_steps = simulate(env_2);
+    std::cout << "Strategy 2 : " << n_steps << " steps\n";
 
     return EXIT_SUCCESS;
 }
