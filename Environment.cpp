@@ -117,8 +117,8 @@ Environment::Environment(int n, float dirty_percentage, float percentage_obstacl
 }
 
 cell &Environment::operator()(int i, int j) {
-    assert(i < _n);
-    assert(j < _n);
+    assert(0 <= i < _n);
+    assert(0 <= j < _n);
     return _data[i * _n + j];
 }
 
@@ -127,8 +127,8 @@ cell &Environment::operator()(position p) {
 }
 
 void Environment::add_vacuum(int i, int j, const std::string &name) {
-    assert(i < _n);
-    assert(j < _n);
+    assert(0 <= i < _n);
+    assert(0 <= j < _n);
     _vacuums.emplace(std::make_pair(std::string(name), vacuum(i, j)));
 }
 
@@ -230,7 +230,7 @@ void Environment::add_agent_function(const std::function<std::string(const std::
 }
 
 cell &Environment::operator[](int i) {
-    assert(i < _n * _n);
+    assert(0 <= i < _n * _n);
     return _data[i];
 }
 
