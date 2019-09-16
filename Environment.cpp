@@ -4,9 +4,10 @@
 
 #include <random>
 #include <algorithm>
-#include <cassert>
+//#include <cassert>
 
 #include "Environment.h"
+#include "custom_assertion.h"
 
 void Environment::recalculate_neighbor_obstacles() {
     for (auto &obj : _data)
@@ -52,7 +53,7 @@ Environment::Environment(int n) : _n(n), _data(n * n) {
 }
 
 Environment::Environment(int n, float dirty_percentage) : Environment(n) {
-    assert(0.0 <= dirty_percentage <= 1.0);
+    ASSERT(0.0 <= dirty_percentage <= 1.0, "dirty percentage can only be between 0.0 and 1.0")
     unsigned long n_elements = _data.size();
 
     if (dirty_percentage == 1.0) {
@@ -83,7 +84,7 @@ Environment::Environment(int n, float dirty_percentage) : Environment(n) {
 }
 
 Environment::Environment(int n, float dirty_percentage, float percentage_obstacle) : Environment(n, dirty_percentage) {
-    assert(0.0 <= percentage_obstacle <= percentage_obstacle);
+    ASSERT(0.0 <= percentage_obstacle <= 1.0, "percentage obstacle can only between 0.0 and 1.0")
     unsigned long n_elements = _data.size();
 
     if (percentage_obstacle == 1.0) {
@@ -117,8 +118,8 @@ Environment::Environment(int n, float dirty_percentage, float percentage_obstacl
 }
 
 cell &Environment::operator()(int i, int j) {
-    assert(0 <= i < _n);
-    assert(0 <= j < _n);
+    ASSERT(0 <= i < _n, "Input i index out of range")
+    ASSERT(0 <= j < _n, "Input j index out of range")
     return _data[i * _n + j];
 }
 
@@ -127,27 +128,22 @@ cell &Environment::operator()(position p) {
 }
 
 void Environment::add_vacuum(int i, int j, const std::string &name) {
-    assert(0 <= i < _n);
-    assert(0 <= j < _n);
+    ASSERT(0 <= i < _n, "Input i index out of range")
+    ASSERT(0 <= j < _n, "Input j index out of range")
     _vacuums.emplace(std::make_pair(std::string(name), vacuum(i, j)));
 }
 
 vacuum &Environment::access_vacuum(const std::string &name) {
-    assert(_vacuums.find(name) != _vacuums.end());
+    ASSERT(_vacuums.find(name) != _vacuums.end(), "Vacuum " + name + " not found")
     return _vacuums[name];
 }
 
 void Environment::move_vacuum(const std::string &name, char direction, char clean) {
-    assert(direction == 'N' ||
-           direction == 'W' ||
-           direction == 'E' ||
-           direction == 'S');
-    assert(clean == '0' ||
-           clean == 'C' ||
-           clean == 'D');
+    ASSERT(direction == 'N' || direction == 'W' || direction == 'E' || direction == 'S', "Invalid direction")
+    ASSERT(clean == '0' || clean == 'C' || clean == 'D', "Invalid cleaning entry")
 
     auto search = _vacuums.find(name);
-    assert(search != _vacuums.end());
+    ASSERT(search != _vacuums.end(), "Vacuum " + name + " not found")
 
     vacuum current_vacuum = search->second;
     position p = current_vacuum.get_position();
@@ -160,47 +156,47 @@ void Environment::move_vacuum(const std::string &name, char direction, char clea
 
     switch (current_cell.cellType) {
         case cell::EAST_BOUNDARY_TYPE:
-            assert(direction != 'E');
+            ASSERT(direction != 'E', "Can't go east when at the east border")
             break;
         case cell::WEST_BOUNDARY_TYPE:
-            assert(direction != 'W');
+            ASSERT(direction != 'W', "Can't go west when at the west border")
             break;
         case cell::NORTH_BOUNDARY_TYPE:
-            assert(direction != 'N');
+            ASSERT(direction != 'N', "Can't go north when at the northern border")
             break;
         case cell::SOUTH_BOUNDARY_TYPE:
-            assert(direction != 'S');
+            ASSERT(direction != 'S', "Can't go south when at the southern border")
             break;
         case cell::NORTHWEST_CORNER_TYPE:
-            assert(direction != 'N' && direction != 'W');
+            ASSERT(direction != 'N' && direction != 'W', "Can't go northwest when at the northwest corner")
             break;
         case cell::NORTHEAST_CORNER_TYPE:
-            assert(direction != 'N' && direction != 'E');
+            ASSERT(direction != 'N' && direction != 'E', "Can't go northeast when at the northeast corner")
             break;
         case cell::SOUTHWEST_CORNER_TYPE:
-            assert(direction != 'S' && direction != 'W');
+            ASSERT(direction != 'S' && direction != 'W', "Can't go southwest when at the southwest corner")
             break;
         case cell::SOUTHEAST_CORNER_TYPE:
-            assert(direction != 'S' && direction != 'E');
+            ASSERT(direction != 'S' && direction != 'E', "Can't go southeast when at the southeast corner")
             break;
         default:;
     }
 
     if (direction == 'W') {
         cell neighbor = operator()(p.first, p.second - 1);
-        assert(!neighbor.contains_obstacle);
+        ASSERT(!neighbor.contains_obstacle, "There is an obstacle here")
         p.second--;
     } else if (direction == 'E') {
         cell neighbor = operator()(p.first, p.second + 1);
-        assert(!neighbor.contains_obstacle);
+        ASSERT(!neighbor.contains_obstacle, "There is an obstacle here")
         p.second++;
     } else if (direction == 'N') {
         cell neighbor = operator()(p.first - 1, p.second);
-        assert(!neighbor.contains_obstacle);
+        ASSERT(!neighbor.contains_obstacle, "There is an obstacle here")
         p.first--;
     } else {
         cell neighbor = operator()(p.first + 1, p.second);
-        assert(!neighbor.contains_obstacle);
+        ASSERT(!neighbor.contains_obstacle, "There is an obstacle here")
         p.first++;
     }
 
@@ -211,7 +207,7 @@ bool Environment::step_vacuum(const std::string &vacuum_name) {
     Environment current_environment = *this;
     std::string ret = agent_function(vacuum_name, current_environment);
     char clean = ret[0];
-    assert(clean == 'C' || clean == 'D' || clean == '0');
+    ASSERT(clean == 'C' || clean == 'D' || clean == '0', "Invalid cleaning entry")
     move_vacuum(vacuum_name, ret[1], clean);
     return check_all_clean();
 }
@@ -230,7 +226,7 @@ void Environment::add_agent_function(const std::function<std::string(const std::
 }
 
 cell &Environment::operator[](int i) {
-    assert(0 <= i < _n * _n);
+    ASSERT(0 <= i < _n * _n, "Out of bounds")
     return _data[i];
 }
 
