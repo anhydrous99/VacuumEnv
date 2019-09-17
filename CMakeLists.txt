@@ -3,6 +3,7 @@ project(CSCI6350_project1)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(JSON_BuildTests OFF CACHE BOOL "Build nlohmann's json tests" FORCE)
 add_subdirectory(extern/json)
 
 add_executable(CSCI6350_project1
