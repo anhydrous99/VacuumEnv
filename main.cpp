@@ -3,6 +3,7 @@
 #include <chrono>
 
 #include "Environment.h"
+#include "parser.h"
 
 int simulate(Environment env);
 
@@ -10,9 +11,29 @@ int main(int argc, char *argv[]) {
     using namespace std::chrono;
     typedef high_resolution_clock hrc;
 
+    // Get and print configuration from json file
+    parser p("conf.json");
+    std::cout << "Using the following settings - \n";
+    std::cout << p.side_size << " - side size\n";
+    std::cout << p.step_limit << " - step limit\n\n";
+    int i = 1;
+    for (const auto& r : p.runs) {
+        std::cout << i << " - run\n";
+        std::cout << r.strategy << " - strategy\n";
+        std::cout << r.dirty_percentage << " - percent dirty\n";
+        std::cout << r.obstruction_percentage << " - obstruction_percentage\n\n";
+        i++;
+    }
+    std::cout << "Press any key to continue ...\n";
+    std::cin.get();
+
+    // Init a random number generator for strategy 2
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(1, 4);
+
+
+    /*
     std::function<std::string(const std::string &, Environment &)> strategy_1 = [](const std::string &vacuum_name,
                                                                                    Environment &env) -> std::string {
         vacuum current_vacuum = env.access_vacuum(vacuum_name);
@@ -132,7 +153,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Strategy 1 : " << strat_1 << " steps - completed in " << duration_cast<milliseconds>(t2 - t1).count()
               << " milliseconds\n";
     std::cout << "Strategy 2 : " << strat_2 << " steps - completed in " << duration_cast<milliseconds>(t4 - t3).count()
-              << " milliseconds\n";
+              << " milliseconds\n"; */
 
     return EXIT_SUCCESS;
 }

@@ -1,0 +1,121 @@
+{
+  "side_size": 10,
+  "step_limit": 10000,
+  "runs": [
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.25
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.5
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.75
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.25
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.5
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.75,
+      "obstruction_percentage": 0.25
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.25,
+      "obstruction_percentage": 0.25
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.5,
+      "obstruction_percentage": 0.25
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.75,
+      "obstruction_percentage": 0.25
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.25,
+      "obstruction_percentage": 0.25
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.5,
+      "obstruction_percentage": 0.25
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.75,
+      "obstruction_percentage": 0.25
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.25,
+      "obstruction_percentage": 0.5
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.5,
+      "obstruction_percentage": 0.5
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.75,
+      "obstruction_percentage": 0.5
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.25,
+      "obstruction_percentage": 0.5
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.5,
+      "obstruction_percentage": 0.5
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.75,
+      "obstruction_percentage": 0.5
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.25,
+      "obstruction_percentage": 0.75
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.5,
+      "obstruction_percentage": 0.75
+    },
+    {
+      "strategy": 1,
+      "dirty_percentage": 0.75,
+      "obstruction_percentage": 0.75
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.25,
+      "obstruction_percentage": 0.75
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.5,
+      "obstruction_percentage": 0.75
+    },
+    {
+      "strategy": 2,
+      "dirty_percentage": 0.75,
+      "obstruction_percentage": 0.75
+    }
+  ]
+}
