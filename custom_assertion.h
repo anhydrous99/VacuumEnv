@@ -7,6 +7,11 @@
 
 #include <iostream>
 
+#ifdef __clang__
+#undef ASSERT
+#undef assert
+#endif
+
 /*!
  * If assertion fails, it prints out failed line, file, and message. Used with ASSERT macro function.
  * @param assertion

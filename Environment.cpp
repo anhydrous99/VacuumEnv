@@ -4,7 +4,6 @@
 
 #include <random>
 #include <algorithm>
-//#include <cassert>
 
 #include "Environment.h"
 #include "custom_assertion.h"
