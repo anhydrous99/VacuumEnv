@@ -19,6 +19,7 @@ class vacuum {
 
 public:
     vacuum() = default;
+
     /*!
      * Constructs a vacuum object
      * @param x_position

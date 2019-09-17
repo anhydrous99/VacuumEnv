@@ -35,7 +35,11 @@ struct cell {
     bool contains_obstacle = false;
 
     cell() = default;
-    cell(cell_type ctype, cell_value cvalue) { cellType = ctype; cellValue = cvalue; }
+
+    cell(cell_type ctype, cell_value cvalue) {
+        cellType = ctype;
+        cellValue = cvalue;
+    }
 };
 
 std::ostream &operator<<(std::ostream &os, const cell &input_cell);

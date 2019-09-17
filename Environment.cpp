@@ -103,13 +103,14 @@ Environment::Environment(int n, float dirty_percentage, float percentage_obstacl
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(0, n_elements - 1);
 
-    unsigned long n_dirty = static_cast<unsigned>(
-            static_cast<float>(n_elements) * dirty_percentage);
-    std::vector<int> dirty;
-    for (unsigned long i = 0; i < n_dirty; i++) {
+    unsigned long n_obstacles = static_cast<unsigned>(
+            static_cast<float>(n_elements) * percentage_obstacle);
+    std::vector<int> obstacle;
+    for (unsigned long i = 0; i < n_obstacles; i++) {
         int rn = dis(gen);
-        if (std::find(dirty.begin(), dirty.end(), rn) == dirty.end()) {
-            dirty.push_back(rn);
+        if (std::find(obstacle.begin(), obstacle.end(), rn) == obstacle.end() &&
+            _data[rn].cellValue != cell::DIRTY_VALUE) {
+            obstacle.push_back(rn);
             _data[rn].contains_obstacle = true;
         } else {
             i--;
@@ -250,10 +251,17 @@ cell *Environment::data() {
 
 std::ostream &operator<<(std::ostream &os, const Environment &environment) {
     int n = environment._n;
+    std::vector<position> vacuum_position;
+
+    std::transform(environment._vacuums.begin(), environment._vacuums.end(), std::back_inserter(vacuum_position),
+                   [](std::pair<std::string, vacuum> x) -> position { return x.second.get_position(); });
+
     for (int i = 0; i < n; i++) {
         int current_row = i * n;
         for (int j = 0; j < n; j++) {
-            os << environment._data[current_row + j] << " ";
+            bool found =
+                    std::find(vacuum_position.begin(), vacuum_position.end(), position(i, j)) != vacuum_position.end();
+            os << environment._data[current_row + j] << ((found) ? "\033[36m⬅\033[0m" : " ");
         }
         os << std::endl;
     }

@@ -7,6 +7,13 @@
 
 #include <iostream>
 
+/*!
+ * If assertion fails, it prints out failed line, file, and message. Used with ASSERT macro function.
+ * @param assertion
+ * @param file
+ * @param line
+ * @param msg
+ */
 void assert(bool assertion, const std::string &file, const int line, const std::string &msg) {
     if (!assertion) {
         std::cerr << file << ":" << line << " " << msg << std::endl;
