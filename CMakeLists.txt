@@ -3,7 +3,6 @@ project(CSCI6350_project1)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(extern/cxxopts)
 add_subdirectory(extern/json)
 
 add_executable(CSCI6350_project1
