@@ -5,8 +5,6 @@
 #include "Environment.h"
 #include "parser.h"
 
-int simulate(Environment env);
-
 int main(int argc, char *argv[]) {
     using namespace std::chrono;
     typedef high_resolution_clock hrc;
@@ -17,7 +15,7 @@ int main(int argc, char *argv[]) {
     std::cout << p.side_size << " - side size\n";
     std::cout << p.step_limit << " - step limit\n\n";
     int i = 1;
-    for (const auto& r : p.runs) {
+    for (const auto &r : p.runs) {
         std::cout << i << " - run\n";
         std::cout << r.strategy << " - strategy\n";
         std::cout << r.dirty_percentage << " - percent dirty\n";
@@ -49,22 +47,62 @@ int main(int argc, char *argv[]) {
         else
             ret = "C";
 
+        ret += " ";
+
+
         // Choose next direction based on even and odd numbered rows
         if (current_position.second != n - 1 && current_position.second != 0) {
             if ((current_position.first + 1) % 2 == 0)
-                ret += "W";
+                ret[1] = 'W';
             else
-                ret += "E";
+                ret[1] = 'E';
         } else if (current_position.second == 0) {
             if ((current_position.first + 1) % 2 == 0)
-                ret += "S";
+                ret[1] = 'S';
             else
-                ret += "E";
+                ret[1] = 'E';
         } else if (current_position.second == n - 1) {
             if ((current_position.first + 1) % 2 == 0)
-                ret += "W";
+                ret[1] = 'W';
             else
-                ret += "S";
+                ret[1] = 'S';
+        }
+
+        while (true) {
+            if (ret[1] == 'W' && (
+                current_cell.cellType == cell::WEST_BOUNDARY_TYPE ||
+                 current_cell.cellType == cell::NORTHWEST_CORNER_TYPE ||
+                 current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE ||
+                 env(current_vacuum.get_x(), current_vacuum.get_y() - 1).contains_obstacle)) {
+                ret[1] = 'S';
+                continue;
+            }
+            if (ret[1] == 'S' && (
+                    current_cell.cellType == cell::SOUTH_BOUNDARY_TYPE ||
+                    current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE ||
+                    current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE ||
+                    env(current_vacuum.get_x() + 1, current_vacuum.get_y()).contains_obstacle)) {
+                ret[1] = 'E';
+                continue;
+            }
+            if (ret[1] == 'E' && (
+                    current_cell.cellType == cell::EAST_BOUNDARY_TYPE ||
+                    current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE ||
+                    current_cell.cellType == cell::NORTHEAST_CORNER_TYPE ||
+                    env(current_vacuum.get_x(), current_vacuum.get_y() + 1).contains_obstacle)) {
+                ret[1] = 'N';
+                continue;
+            }
+            if (ret[1] == 'N' && (
+                    current_cell.cellType == cell::NORTH_BOUNDARY_TYPE ||
+                    current_cell.cellType == cell::NORTHEAST_CORNER_TYPE ||
+                    current_cell.cellType == cell::NORTHWEST_CORNER_TYPE ||
+                    env(current_vacuum.get_x() - 1, current_vacuum.get_y()).contains_obstacle)) {
+                ret[1] = 'W';
+                continue;
+            }
+
+            break;
         }
 
         return ret;
@@ -141,8 +179,32 @@ int main(int argc, char *argv[]) {
         }
     };
 
+    std::vector<int> durations(p.runs.size());
+    std::vector<int> times(p.runs.size());
+    i = 0;
+    for (const auto& r : p.runs) {
+        Environment environment(p.side_size, r.dirty_percentage, r.obstruction_percentage);
+        environment.add_vacuum(0, 0, "Vacuum_1");
+
+        environment.add_agent_function((r.strategy == 1) ? strategy_1 : strategy_2);
+
+        std::cout << "\n RUN " << i << ": \n";
+        int j;
+        auto t1 = hrc::now();
+        for (j = 0; j < p.step_limit; j++) {
+            std::cout << environment << std::endl << std::endl;
+            if (environment.step_vacuums())
+                break;
+        }
+        auto t2 = hrc::now();
+        if (j == p.step_limit - 1)
+            durations[i] = std::numeric_limits<int>::max();
+        times[i] = duration_cast<milliseconds>(t2 - t1).count();
+        i++;
+    }
+
     /*
-    Environment env_1(10, 0.50);
+    Environment env_1(10, 0.50, 0.25);
     Environment env_2(10, 0.50);
     env_1.add_vacuum(0, 0, "Vacuum_1");
     env_1.add_agent_function(strategy_1);
@@ -165,15 +227,4 @@ int main(int argc, char *argv[]) {
               << " milliseconds\n"; */
 
     return EXIT_SUCCESS;
-}
-
-int simulate(Environment env) {
-    int i = 0;
-    while (true) {
-        std::cout << "Step " << i << ": \n" << env << std::endl;
-        if (env.step_vacuums())
-            break;
-        i++;
-    }
-    return i;
 }

@@ -107,10 +107,10 @@ Environment::Environment(int n, float dirty_percentage, float percentage_obstacl
     std::vector<int> obstacle;
     for (unsigned long i = 0; i < n_obstacles; i++) {
         int rn = dis(gen);
-        if (std::find(obstacle.begin(), obstacle.end(), rn) == obstacle.end() &&
-            _data[rn].cellValue != cell::DIRTY_VALUE) {
+        if (std::find(obstacle.begin(), obstacle.end(), rn) == obstacle.end()) {
             obstacle.push_back(rn);
             _data[rn].contains_obstacle = true;
+            _data[rn].cellValue = cell::CLEAN_VALUE;
         } else {
             i--;
         }
@@ -130,6 +130,8 @@ cell &Environment::operator()(position p) {
 void Environment::add_vacuum(int i, int j, const std::string &name) {
     ASSERT(0 <= i < _n, "Input i index out of range")
     ASSERT(0 <= j < _n, "Input j index out of range")
+    if(!operator()(i, j).contains_obstacle)
+        operator()(i, j).contains_obstacle = false;
     _vacuums.emplace(std::make_pair(std::string(name), vacuum(i, j)));
 }
 
@@ -148,6 +150,8 @@ void Environment::move_vacuum(const std::string &name, char direction, char clea
     vacuum current_vacuum = search->second;
     position p = current_vacuum.get_position();
     cell &current_cell = operator()(p.first, p.second);
+
+    current_cell.has_been_transvered = true;
 
     if (clean == 'D') {
         current_cell.cellValue = cell::CLEAN_VALUE;

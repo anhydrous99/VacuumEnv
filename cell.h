@@ -33,6 +33,7 @@ struct cell {
 
     std::vector<cell_obstacle> neighborObstacles;
     bool contains_obstacle = false;
+    bool has_been_transvered = false;
 
     cell() = default;
 

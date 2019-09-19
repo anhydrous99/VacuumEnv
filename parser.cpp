@@ -20,7 +20,7 @@ parser::parser(const std::string &conf_path) {
     auto rns = parsed["runs"];
     for (auto &r : rns) {
         auto obstruction = r.find("obstruction_percentage");
-        double obs = (obstruction != r.end()) ? obstruction->get<int>() : 0.0e0;
+        float obs = (obstruction != r.end()) ? r["obstruction_percentage"].get<float>() : 0.0e0;
         runs.emplace_back(single_run(r["strategy"].get<int>(), r["dirty_percentage"].get<float>(),
                 static_cast<float>(obs)));
     }

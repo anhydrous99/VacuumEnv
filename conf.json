@@ -24,8 +24,7 @@
     },
     {
       "strategy": 2,
-      "dirty_percentage": 0.75,
-      "obstruction_percentage": 0.25
+      "dirty_percentage": 0.75
     },
     {
       "strategy": 1,

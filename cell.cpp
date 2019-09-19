@@ -22,12 +22,15 @@ std::ostream &operator<<(std::ostream &os, const cell &input_cell) {
         }
     }
     if (!input_cell.contains_obstacle) {
-        if (input_cell.cellValue == cell::CLEAN_VALUE)
-            os << "\033[32mc\033[0m";
+
+        if (input_cell.has_been_transvered)
+            os << "\033[33mx\033[0m";
+        else if (input_cell.cellValue == cell::CLEAN_VALUE)
+            os << "\033[32m0\033[0m";
         else
-            os << "\033[31md\033[0m";
+            os << "\033[31m1\033[0m";
     } else {
-        os << "\033[31mo\033[0m";
+        os << "\033[35mo\033[0m";
     }
     os << "}";
     return os;
