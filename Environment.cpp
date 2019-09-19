@@ -187,7 +187,7 @@ void Environment::move_vacuum(const std::string &name, char direction, char clea
     position p = current_vacuum.get_position();
     cell &current_cell = operator()(p.first, p.second);
 
-    current_cell.has_been_transvered = true;
+    current_cell.has_been_transversed = true;
 
     if (clean == 'D') {
         current_cell.cellValue = cell::CLEAN_VALUE;

@@ -23,7 +23,7 @@ std::ostream &operator<<(std::ostream &os, const cell &input_cell) {
     }
     if (!input_cell.contains_obstacle) {
 
-        if (input_cell.has_been_transvered)
+        if (input_cell.has_been_transversed)
             os << "\033[33mx\033[0m";
         else if (input_cell.cellValue == cell::CLEAN_VALUE)
             os << "\033[32m0\033[0m";
