@@ -32,8 +32,14 @@ int main(int argc, char *argv[]) {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(1, 4);
 
+    // Create the random number generator that will be used when randomly placng the vacuums
+    std::uniform_int_distribution<int> dis_vacuums(0, p.side_size - 1);
+
+    // Boolean for first strategy containing whether the agent has reached the corner
+    bool has_reached_corner = false;
+
     // Create the first strategy as a lambda function and store in a function type
-    std::function<std::string(const std::string &, Environment &)> strategy_1 = [](const std::string &vacuum_name,
+    std::function<std::string(const std::string &, Environment &)> strategy_1 = [&](const std::string &vacuum_name,
                                                                                    Environment &env) -> std::string {
         vacuum current_vacuum = env.access_vacuum(vacuum_name);    // Get current vacuum
         position current_position = current_vacuum.get_position(); // Get current position of vacuum
@@ -52,22 +58,48 @@ int main(int argc, char *argv[]) {
         ret += " ";
 
 
-        // Choose next direction based on even and odd numbered rows
-        if (current_position.second != n - 1 && current_position.second != 0) {
-            if ((current_position.first + 1) % 2 == 0)
-                ret[1] = 'W';
-            else
-                ret[1] = 'E';
-        } else if (current_position.second == 0) {
-            if ((current_position.first + 1) % 2 == 0)
-                ret[1] = 'S';
-            else
-                ret[1] = 'E';
-        } else if (current_position.second == n - 1) {
-            if ((current_position.first + 1) % 2 == 0)
-                ret[1] = 'W';
-            else
-                ret[1] = 'S';
+        if (!has_reached_corner) {
+            // Choose next direction based on even and odd numbered rows
+            if (current_position.second != n - 1 && current_position.second != 0) {
+                if ((current_position.first + 1) % 2 == 0)
+                    ret[1] = 'W';
+                else
+                    ret[1] = 'E';
+            } else if (current_position.second == 0) {
+                if ((current_position.first + 1) % 2 == 0)
+                    ret[1] = 'S';
+                else
+                    ret[1] = 'E';
+            } else if (current_position.second == n - 1) {
+                if ((current_position.first + 1) % 2 == 0)
+                    ret[1] = 'W';
+                else
+                    ret[1] = 'S';
+            }
+
+            if (current_cell.cellType == cell::SOUTHEAST_CORNER_TYPE)
+                has_reached_corner = true;
+        } else {
+            //  Choose next direction based on odd and even numbered rows
+            if (current_position.second != n - 1 && current_position.second != 0) {
+                if ((current_position.first + 1) % 2 == 0)
+                    ret[1] = 'E';
+                else
+                    ret[1] = 'W';
+            } else if (current_position.second == 0) {
+                if ((current_position.first + 1) % 2 == 0)
+                    ret[1] = 'E';
+                else
+                    ret[1] = 'N';
+            } else if (current_position.second == n - 1) {
+                if ((current_position.first + 1) % 2 == 0)
+                    ret[1] = 'N';
+                else
+                    ret[1] = 'W';
+            }
+
+            if (current_cell.cellType == cell::NORTHWEST_CORNER_TYPE)
+                has_reached_corner = false;
         }
 
         while (true) {
@@ -188,7 +220,7 @@ int main(int argc, char *argv[]) {
         Environment environment(p.side_size, r.dirty_percentage, r.obstruction_percentage);
 
         try {
-            environment.add_vacuum(0, 0, "Vacuum_1");
+            environment.add_vacuum(dis_vacuums(gen), dis_vacuums(gen), "Vacuum_1");
         } catch (const std::runtime_error &error) {
             durations[i] = super_max;
             times[i] = super_max;
@@ -202,7 +234,7 @@ int main(int argc, char *argv[]) {
         int j;
         auto t1 = hrc::now();
         for (j = 0; j < p.step_limit; j++) {
-            std::cout << environment << std::endl << std::endl;
+            //std::cout << environment << std::endl << std::endl;
             if (environment.step_vacuums())
                 break;
         }
