@@ -14,7 +14,10 @@ add_executable(CSCI6350_project1
         cell.h
         cell.cpp
         vacuum.h
-        vacuum.cpp parser.cpp parser.h)
+        vacuum.cpp
+        parser.cpp
+        parser.h
+        )
 
 target_link_libraries(CSCI6350_project1 nlohmann_json::nlohmann_json)
 

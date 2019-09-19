@@ -1,11 +1,13 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include <stdexcept>
 
 #include "Environment.h"
 #include "parser.h"
 
 int main(int argc, char *argv[]) {
+    int super_max = std::numeric_limits<int>::max();
     using namespace std::chrono;
     typedef high_resolution_clock hrc;
 
@@ -70,10 +72,10 @@ int main(int argc, char *argv[]) {
 
         while (true) {
             if (ret[1] == 'W' && (
-                current_cell.cellType == cell::WEST_BOUNDARY_TYPE ||
-                 current_cell.cellType == cell::NORTHWEST_CORNER_TYPE ||
-                 current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE ||
-                 env(current_vacuum.get_x(), current_vacuum.get_y() - 1).contains_obstacle)) {
+                    current_cell.cellType == cell::WEST_BOUNDARY_TYPE ||
+                    current_cell.cellType == cell::NORTHWEST_CORNER_TYPE ||
+                    current_cell.cellType == cell::SOUTHWEST_CORNER_TYPE ||
+                    env(current_vacuum.get_x(), current_vacuum.get_y() - 1).contains_obstacle)) {
                 ret[1] = 'S';
                 continue;
             }
@@ -182,9 +184,17 @@ int main(int argc, char *argv[]) {
     std::vector<int> durations(p.runs.size());
     std::vector<int> times(p.runs.size());
     i = 0;
-    for (const auto& r : p.runs) {
+    for (const auto &r : p.runs) {
         Environment environment(p.side_size, r.dirty_percentage, r.obstruction_percentage);
-        environment.add_vacuum(0, 0, "Vacuum_1");
+
+        try {
+            environment.add_vacuum(0, 0, "Vacuum_1");
+        } catch (const std::runtime_error &error) {
+            durations[i] = super_max;
+            times[i] = super_max;
+            i++;
+            continue;
+        }
 
         environment.add_agent_function((r.strategy == 1) ? strategy_1 : strategy_2);
 
@@ -197,34 +207,24 @@ int main(int argc, char *argv[]) {
                 break;
         }
         auto t2 = hrc::now();
-        if (j == p.step_limit - 1)
-            durations[i] = std::numeric_limits<int>::max();
+        durations[i] = (j == p.step_limit) ? super_max : j;
         times[i] = duration_cast<milliseconds>(t2 - t1).count();
         i++;
     }
 
-    /*
-    Environment env_1(10, 0.50, 0.25);
-    Environment env_2(10, 0.50);
-    env_1.add_vacuum(0, 0, "Vacuum_1");
-    env_1.add_agent_function(strategy_1);
-
-    env_2.add_vacuum(0, 0, "Vacuum_1");
-    env_2.add_agent_function(strategy_2);
-
-    std::cout << "Strategy 1: \n";
-    auto t1 = hrc::now();
-    int strat_1 = simulate(env_1);
-    auto t2 = hrc::now();
-    std::cout << "Strategy 2: \n";
-    auto t3 = hrc::now();
-    int strat_2 = simulate(env_2);
-    auto t4 = hrc::now();
-
-    std::cout << "Strategy 1 : " << strat_1 << " steps - completed in " << duration_cast<milliseconds>(t2 - t1).count()
-              << " milliseconds\n";
-    std::cout << "Strategy 2 : " << strat_2 << " steps - completed in " << duration_cast<milliseconds>(t4 - t3).count()
-              << " milliseconds\n"; */
+    for (unsigned long j = 0; j < durations.size(); j++) {
+        std::cout << "Run - " << j + 1 << " stats\n";
+        if (durations[j] == super_max) {
+            if (times[j] == super_max)
+                std::cout << "Vacuum could not find path\n";
+            else
+                std::cout << "Vacuum found it self in a infinite loop or there was an inaccessable location\n";
+        } else {
+            std::cout << "Steps - " << durations[j] << std::endl;
+            std::cout << "Time - " << times[j] << " millisenconds\n";
+        }
+        std::cout << std::endl;
+    }
 
     return EXIT_SUCCESS;
 }

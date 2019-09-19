@@ -3,6 +3,7 @@
 //
 
 #include <random>
+#include <stdexcept>
 #include <algorithm>
 
 #include "Environment.h"
@@ -130,8 +131,43 @@ cell &Environment::operator()(position p) {
 void Environment::add_vacuum(int i, int j, const std::string &name) {
     ASSERT(0 <= i < _n, "Input i index out of range")
     ASSERT(0 <= j < _n, "Input j index out of range")
-    if(!operator()(i, j).contains_obstacle)
+    if (operator()(i, j).contains_obstacle)
         operator()(i, j).contains_obstacle = false;
+
+    if (i == 0 && j == 0) {
+        if (operator()(1, 0).contains_obstacle && operator()(1, 0).contains_obstacle)
+            throw std::runtime_error("No path from vacuum location");
+    } else if (i == 0 && j == _n - 1) {
+        if (operator()(1, _n - 1).contains_obstacle && operator()(0, _n - 2).contains_obstacle)
+            throw std::runtime_error("No path from vacuum location");
+    } else if (i == _n - 1 && j == 0) {
+        if (operator()(_n - 2, 0).contains_obstacle && operator()(_n - 1, 1).contains_obstacle)
+            throw std::runtime_error("No path from vacuum location");
+    } else if (i == _n - 1 && j == _n - 1) {
+        if (operator()(_n - 2, _n - 1).contains_obstacle && operator()(_n - 1, _n - 2).contains_obstacle)
+            throw std::runtime_error("No path from vacuum location");
+    } else if (i == 0) {
+        if (operator()(0, j - 1).contains_obstacle && operator()(0, j + 1).contains_obstacle &&
+            operator()(1, j).contains_obstacle)
+            throw std::runtime_error("No path from vacuum location");
+    } else if (i == _n - 1) {
+        if (operator()(_n - 1, j - 1).contains_obstacle && operator()(_n - 1, j + 1).contains_obstacle &&
+            operator()(_n - 2, j).contains_obstacle)
+            throw std::runtime_error("No path from vacuum location");
+    } else if (j == 0) {
+        if (operator()(i - 1, 0).contains_obstacle && operator()(i + 1, 0).contains_obstacle &&
+            operator()(i, 1).contains_obstacle)
+            throw std::runtime_error("No path form vacuum location");
+    } else if (j == _n - 1) {
+        if (operator()(i - 1, _n - 1).contains_obstacle && operator()(i + 1, _n - 1).contains_obstacle &&
+            operator()(i, _n - 2).contains_obstacle)
+            throw std::runtime_error("No path from vacuum location");
+    } else {
+        if (operator()(i - 1, j).contains_obstacle && operator()(i + 1, j).contains_obstacle &&
+            operator()(i, j - 1).contains_obstacle && operator()(i, j + 1).contains_obstacle)
+            throw std::runtime_error("No paht form vacuum location");
+    }
+
     _vacuums.emplace(std::make_pair(std::string(name), vacuum(i, j)));
 }
 
