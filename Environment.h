@@ -1,5 +1,7 @@
 //
 // Created by aherrera on 8/31/19.
+// CSCI-6350-01 Project 1
+// Due: 9/20/2019
 //
 
 #ifndef CSCI6350_PROJECT1_ENVIRONMENT_H
@@ -15,118 +17,118 @@
  * It consists of a matrix type of interface where
  */
 class Environment {
-    std::function<std::string(const std::string &, Environment &)> agent_function;
-    std::map<std::string, vacuum> _vacuums;
-    std::vector<cell> _data;
-    int _n;
+  std::function<std::string(const std::string &, Environment &)> agent_function;
+  std::map<std::string, vacuum> _vacuums;
+  std::vector<cell> _data;
+  int _n;
 
-    void recalculate_neighbor_obstacles();
+  void recalculate_neighbor_obstacles();
 
 public:
-    // construct/destroy
+  // construct/destroy
 
-    /*!
-     * Constructs a nxn empty environment
-     * @param n Size of side of environment
-     */
-    explicit Environment(int n);
+  /*!
+   * Constructs a nxn empty environment
+   * @param n Size of side of environment
+   */
+  explicit Environment(int n);
 
-    /*!
-     * Constructs nxn environment with (dirty_percentage) clean/dirty cell ratio
-     * @param n Size of side of environment
-     * @param dirty_percentage Percentage of cells dirty (0.0 <= dirty_percentage <= 1.0)
-     */
-    Environment(int n, float dirty_percentage);
+  /*!
+   * Constructs nxn environment with (dirty_percentage) clean/dirty cell ratio
+   * @param n Size of side of environment
+   * @param dirty_percentage Percentage of cells dirty (0.0 <= dirty_percentage <= 1.0)
+   */
+  Environment(int n, float dirty_percentage);
 
-    /*!
-     * Constructs nxn environment with (dirty_percentage) clean/dirty cell ratio and
-     * (pertange_obstacle) obstacle/non-obstacle ratio
-     * @param n Size of size of environment
-     * @param dirty_percentage Percentage of cells dirty (0.0 <= dirty_percentage <= 1.0)
-     * @param percentage_obstacle Percentage of cells obstacles (0.0 <= percentage_obstacle <= 1.0)
-     */
-    Environment(int n, float dirty_percentage, float percentage_obstacle);
+  /*!
+   * Constructs nxn environment with (dirty_percentage) clean/dirty cell ratio and
+   * (pertange_obstacle) obstacle/non-obstacle ratio
+   * @param n Size of size of environment
+   * @param dirty_percentage Percentage of cells dirty (0.0 <= dirty_percentage <= 1.0)
+   * @param percentage_obstacle Percentage of cells obstacles (0.0 <= percentage_obstacle <= 1.0)
+   */
+  Environment(int n, float dirty_percentage, float percentage_obstacle);
 
-    /*!
-     * Used to access environment cells
-     * @param i The row to access
-     * @param j The column to access
-     * @return The cell at (i, j)
-     */
-    cell &operator()(int i, int j);
+  /*!
+   * Used to access environment cells
+   * @param i The row to access
+   * @param j The column to access
+   * @return The cell at (i, j)
+   */
+  cell &operator()(int i, int j);
 
-    /*!
-     * Used to access environment cells
-     * @param p Position type, derived from std::pair<int, int>
-     * @return returns cell at position p
-     */
-    cell &operator()(position p);
+  /*!
+   * Used to access environment cells
+   * @param p Position type, derived from std::pair<int, int>
+   * @return returns cell at position p
+   */
+  cell &operator()(position p);
 
-    /*!
-     * Used to access environment cells consecutively
-     * @param i The index
-     * @return The cell at index i
-     */
-    cell &operator[](int i);
+  /*!
+   * Used to access environment cells consecutively
+   * @param i The index
+   * @return The cell at index i
+   */
+  cell &operator[](int i);
 
-    /*!
-     * Adds a vacuum to the environment
-     * @param i Ith column to put vacuum at
-     * @param j Jth row to put vacuum at
-     */
-    void add_vacuum(int i, int j, const std::string &name);
+  /*!
+   * Adds a vacuum to the environment
+   * @param i Ith column to put vacuum at
+   * @param j Jth row to put vacuum at
+   */
+  void add_vacuum(int i, int j, const std::string &name);
 
-    /*!
-     * Gets reference to vacuum "name"
-     * @param name Name of vacuum
-     * @return A reference to the vacuum
-     */
-    vacuum &access_vacuum(const std::string &name);
+  /*!
+   * Gets reference to vacuum "name"
+   * @param name Name of vacuum
+   * @return A reference to the vacuum
+   */
+  vacuum &access_vacuum(const std::string &name);
 
-    /*!
-     * Move a vacuum
-     * @param direction
-     */
-    void move_vacuum(const std::string &name, char direction, char clean = '0');
+  /*!
+   * Move a vacuum
+   * @param direction
+   */
+  void move_vacuum(const std::string &name, char direction, char clean = '0');
 
-    /*!
-     * Steps a vacuum by 1 step using a preset vacuum function
-     * @param vacuum_name The name of the vacuum
-     * @return Whether the Environment is clean
-     */
-    bool step_vacuum(const std::string &vacuum_name);
+  /*!
+   * Steps a vacuum by 1 step using a preset vacuum function
+   * @param vacuum_name The name of the vacuum
+   * @return Whether the Environment is clean
+   */
+  bool step_vacuum(const std::string &vacuum_name);
 
-    /*!
-     * Changes the agent function
-     * @param func
-     */
-    void add_agent_function(const std::function<std::string(const std::string &, Environment &)> &func);
+  /*!
+   * Changes the agent function
+   * @param func
+   */
+  void add_agent_function(const std::function<std::string(const std::string &, Environment &)> &func);
 
-    /*!
-     * Steps all vacuums by 1 using a preset vacuum function
-     * @return Whether the Environment is clean
-     */
-    bool step_vacuums();
+  /*!
+   * Steps all vacuums by 1 using a preset vacuum function
+   * @return Whether the Environment is clean
+   */
+  bool step_vacuums();
 
-    /*!
-     * Check if environment has been cleaned
-     * @return True if cleaned False otherwise
-     */
-    bool check_all_clean();
+  /*!
+   * Check if environment has been cleaned
+   * @return True if cleaned False otherwise
+   */
+  bool check_all_clean();
 
-    /*!
-     * Gets size of a side of the Environment
-     * @return The size of a side of the Environment
-     */
-    int side_size();
+  /*!
+   * Gets size of a side of the Environment
+   * @return The size of a side of the Environment
+   */
+  int side_size();
 
-    /*!
-     * Returns a pointer to cell data
-     * @return
-     */
-    cell *data();
+  /*!
+   * Returns a pointer to cell data
+   * @return
+   */
+  cell *data();
 
-    friend std::ostream &operator<<(std::ostream &os, const Environment &environment);
+  friend std::ostream &operator<<(std::ostream &os, const Environment &environment);
 };
 
 /*!

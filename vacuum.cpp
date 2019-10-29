@@ -1,25 +1,27 @@
 //
 // Created by Armando Herrera on 9/3/19.
+// CSCI-6350-01 Project 1
+// Due: 9/20/2019
 //
 
 #include "vacuum.h"
 
 vacuum::vacuum(int x_position, int y_position) {
-    pos = std::make_pair(x_position, y_position);
+  pos = std::make_pair(x_position, y_position);
 }
 
 position vacuum::get_position() {
-    return pos;
+  return pos;
 }
 
 void vacuum::set_position(position p) {
-    pos = p;
+  pos = p;
 }
 
 int vacuum::get_x() {
-    return pos.first;
+  return pos.first;
 }
 
 int vacuum::get_y() {
-    return pos.second;
+  return pos.second;
 }

@@ -1,5 +1,7 @@
 //
 // Created by Armando Herrera on 9/3/19.
+// CSCI-6350-01 Project 1
+// Due: 9/20/2019
 //
 
 #ifndef CSCI6350_PROJECT1_VACUUM_H
@@ -15,41 +17,41 @@ typedef std::pair<int, int> position;
  * This contains information specific to the vacuum agent
  */
 class vacuum {
-    position pos;
+  position pos;
 
 public:
-    vacuum() = default;
+  vacuum() = default;
 
-    /*!
-     * Constructs a vacuum object
-     * @param x_position
-     * @param y_position
-     */
-    vacuum(int x_position, int y_position);
+  /*!
+   * Constructs a vacuum object
+   * @param x_position
+   * @param y_position
+   */
+  vacuum(int x_position, int y_position);
 
-    /*!
-     * Gets the position of the vacuum
-     * @return The position of the object, a pair of integers
-     */
-    position get_position();
+  /*!
+   * Gets the position of the vacuum
+   * @return The position of the object, a pair of integers
+   */
+  position get_position();
 
-    /*!
-     * Sets the position of vacuum
-     * @param p The position withing the Environment to set the vacuum
-     */
-    void set_position(position p);
+  /*!
+   * Sets the position of vacuum
+   * @param p The position withing the Environment to set the vacuum
+   */
+  void set_position(position p);
 
-    /*!
-     * Gets the x-axis position of the vacuum
-     * @return An integer representing the x-axis of the vacuum
-     */
-    int get_x();
+  /*!
+   * Gets the x-axis position of the vacuum
+   * @return An integer representing the x-axis of the vacuum
+   */
+  int get_x();
 
-    /*!
-     * Gets the y-axis position of the vacuum
-     * @return An integer representing the x-axis of the vacuum
-     */
-    int get_y();
+  /*!
+   * Gets the y-axis position of the vacuum
+   * @return An integer representing the x-axis of the vacuum
+   */
+  int get_y();
 };
 
 

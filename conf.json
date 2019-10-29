@@ -1,6 +1,8 @@
 {
   "side_size": 10,
-  "step_limit": 10000,
+  "step_limit": 5000,
+  "print_steps": true,
+  "step_delay": 0,
   "runs": [
     {
       "strategy": 1,
